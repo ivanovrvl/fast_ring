@@ -28,7 +28,7 @@ It is based on the following abstractions:
 	ringBuffer[ring.AddToTail()] = 100
 	fmt.Println("Len", ring.Length())
 
-	// add bytes to head
+	// add bytes to the head
 	var toWrite1 = [8]byte{2, 3, 4, 5, 6, 7, 8, 9}
 	// using loop over segments
 	for _, seg := range ring.AddRangeToHead(len(toWrite1)) {
