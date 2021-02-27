@@ -1,5 +1,5 @@
 # Fast ring buffer
-Fast and flexible implementation of the ring buffer algorithm in Go but simply portable on any another language.
+Fast and flexible implementation of the ring buffer algorithm in Go but simply portable to any another language.
 It provides add/remove to/from the tail or head of the ring buffer by single element or by coping array of elements.
 Access to any element or to any continiuos subset (slice) of the ring buffer is prodived as well.
 
