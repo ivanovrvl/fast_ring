@@ -30,14 +30,18 @@ It is based on the following abstractions:
 
 	// add bytes to head
 	var toWrite1 = [8]byte{2, 3, 4, 5, 6, 7, 8, 9}
+	// using loop over segments
 	for _, seg := range ring.AddRangeToHead(len(toWrite1)) {
 		copy(ringBuffer[seg.Start:seg.Start+seg.Length], toWrite1[seg.RStart:seg.RStart+seg.Length])
 	}
 
 	// add bytes to the tail
 	var toWrite2 = [3]byte{103, 102, 101}
-	for _, seg := range ring.AddRangeToTail(len(toWrite2)) {
-		copy(ringBuffer[seg.Start:seg.Start+seg.Length], toWrite2[seg.RStart:seg.RStart+seg.Length])
+	// without loop
+	seg := ring.AddRangeToTail(len(toWrite2))
+	copy(ringBuffer[seg[0].Start:seg[0].Start+seg[0].Length], toWrite2[0:seg[0].Length])
+	if seg[1].Length > 0 {
+		copy(ringBuffer[seg[1].Start:seg[1].Start+seg[1].Length], toWrite2[seg[1].Length:])
 	}
 
 	// iterate over all elements from the tail to head
