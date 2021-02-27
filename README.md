@@ -5,6 +5,6 @@ Access to any element or to any continiuos subset (slice) of the ring buffer is 
 
 It is based on the following abstractions:
 * Buffer - the ring buffer. It can be any fixed size indexed collection. Index [0..length-1] of preferred.
-* Ring - the logical representation of the ring buffer over Buffer.
-* RingRange - a descriptor of any continiuos subset (slice) of the Ring. It is consint of one or two Segment of the Buffer.
+* Ring - the logical representation of the ring buffer over Buffer having Content between tail anf head.
+* RingRange - a descriptor of any continiuos subset (slice) of the Content. It is consint of one or two Segment of the Buffer.
 * Segment - a continiuos subset (slice) of the Buffer
