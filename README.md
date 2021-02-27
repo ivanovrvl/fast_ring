@@ -8,3 +8,61 @@ It is based on the following abstractions:
 * Ring - a logical representation of the ring buffer over Buffer having Content between tail anf head.
 * Range - a descriptor of any continiuos subset (slice) of the Content. It is consint of one or two Segment of the Buffer.
 * Segment - a continiuos subset (slice) of the Buffer
+
+```go
+
+	// Initialization
+	ring := Ring{ // the ring provider
+		Size:          100,
+		CheckOverflow: false, // will override tail if needed
+	}
+	ringBuffer := make([]byte, ring.Size) // the ring buffer
+
+	// Usage
+
+	// add one byte to the head
+	ringBuffer[ring.AddToHead()] = 1
+	fmt.Println("Len", ring.Length())
+
+	// add one byte to the tail
+	ringBuffer[ring.AddToTail()] = 100
+	fmt.Println("Len", ring.Length())
+
+	// add bytes to head
+	var toWrite1 = [8]byte{2, 3, 4, 5, 6, 7, 8, 9}
+	for _, seg := range ring.AddRangeToHead(len(toWrite1)) {
+		copy(ringBuffer[seg.Start:seg.Start+seg.Length], toWrite1[seg.RStart:seg.RStart+seg.Length])
+	}
+
+	// add bytes to the tail
+	var toWrite2 = [3]byte{103, 102, 101}
+	for _, seg := range ring.AddRangeToTail(len(toWrite2)) {
+		copy(ringBuffer[seg.Start:seg.Start+seg.Length], toWrite2[seg.RStart:seg.RStart+seg.Length])
+	}
+
+	// iterate over all elements from the tail to head
+	for _, seg := range ring.GetRangeFromTail(ring.Length()) {
+		for i := 0; i < seg.Length; i++ {
+			fmt.Print(" ", ringBuffer[seg.Start+i])
+		}
+	}
+	fmt.Println()
+
+	// read bytes from the tail
+	var toRead [10]byte
+	for _, seg := range ring.RemoveRangeFromTail(len(toRead)) {
+		copy(toRead[seg.RStart:seg.RStart+seg.Length], ringBuffer[seg.Start:seg.Start+seg.Length])
+	}
+	fmt.Println(toRead)
+	fmt.Println("Len", ring.Length())
+
+	// read one byte from the tail
+	fmt.Println(ringBuffer[ring.RemoveFromTail()])
+	// read one byte from the head
+	fmt.Println(ringBuffer[ring.RemoveFromHead()])
+	// read one more from the head
+	fmt.Println(ringBuffer[ring.RemoveFromHead()])
+
+	fmt.Println("Len", ring.Length())
+
+```
